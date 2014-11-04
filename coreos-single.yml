@@ -21,10 +21,8 @@ coreos:
         LimitNPROC=1048576
         # Run docker but don't have docker automatically restart
         # containers. This is a job for systemd and unit files.
-        # Turn off inter-container communication (--icc=false) so the containers
-        # can't communicate over etcd or with each other.
-        ExecStart=/usr/bin/docker -d -s=btrfs -r=false --icc=false -H fd://
-
+        ExecStart=/usr/bin/docker --daemon --storage-driver=btrfs --icc=false --host=fd://
+        
         [Install]
         WantedBy=multi-user.target
 
