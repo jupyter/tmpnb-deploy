@@ -193,7 +193,7 @@ coreos:
         Restart=always
         ExecStartPre=/usr/bin/docker pull jupyter/nature-demo
         ExecStartPre=/usr/bin/docker pull jupyter/tmpnb
-        ExecStart=/usr/bin/docker run --name tmpnb --net=host -e CONFIGPROXY_AUTH_TOKEN=NATURE_DEMO -v /var/run/docker.sock:/docker.sock jupyter/tmpnb python orchestrate.py --cull-timeout=240 --docker-version=1.13 --pool-size=128 --image=jupyter/nature-demo --static-files=/srv/ipython/IPython/html/static/ --redirect-uri=/notebooks/Nature.ipynb --command=ipython3\x20notebook\x20--NotebookApp.base_url={base_path}
+        ExecStart=/usr/bin/docker run --name tmpnb --net=host -e CONFIGPROXY_AUTH_TOKEN=NATURE_DEMO -v /var/run/docker.sock:/docker.sock jupyter/tmpnb python orchestrate.py --cull-timeout=240 --docker-version=1.13 --pool-size=128 --image=jupyter/nature-demo --static-files=/srv/ipython/IPython/html/static/ --redirect-uri=/notebooks/Nature.ipynb --command=ipython3\x20notebook\x20--NotebookApp.base_url={base_path} --max-dock-workers=16
         ExecStop=/usr/bin/docker rm -f tmpnb
         [Install]
         WantedBy=tmpnb.target
