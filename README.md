@@ -7,26 +7,19 @@ Apply updates and #1 best admin tool
 
 ```
 apt-get update && apt-get install -y vim
+apt-get upgrade -y
 sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"/' /etc/default/grub
 update-grub
 curl -sSL https://get.docker.com/ubuntu/ | sudo sh
-apt-get upgrade -y
+docker pull jupyter/nature-demo
+docker pull jupyter/configurable-http-proxy
+docker pull jupyter/tmpnb
 reboot
 ```
 
 ### Launching
 
 After everything above is done, launch the tmpnb setup:
-
-#### Grab the images
-
-```
-docker pull jupyter/nature-demo
-docker pull jupyter/configurable-http-proxy
-docker pull jupyter/tmpnb
-```
-
-#### LAUNCH!
 
 ```
 docker run -d --name configproxy --net=host -e CONFIGPROXY_AUTH_TOKEN=LEGIT_KEY jupyter/configurable-http-proxy --default-target http://127.0.0.1:9999
