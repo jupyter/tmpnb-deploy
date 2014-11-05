@@ -7,22 +7,7 @@ Apply updates and #1 best admin tool
 
 ```
 apt-get update && apt-get install -y vim
-```
-
-Next, we need to update Grub's settings to allow cgroups to limit memory and swap:
-
-```
-GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"
-```
-
-Use `sudoedit` to change that Grub line:
-```
-sudoedit /etc/default/grub
-```
-
-Then we can roll on through
-
-```
+sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"/' /etc/default/grub
 update-grub
 curl -sSL https://get.docker.com/ubuntu/ | sudo sh
 apt-get upgrade -y
