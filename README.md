@@ -25,7 +25,7 @@ Then we can roll on through
 ```
 update-grub
 curl -sSL https://get.docker.com/ubuntu/ | sudo sh
-apt-get upgrade
+apt-get upgrade -y
 reboot
 ```
 
