@@ -33,7 +33,17 @@ reboot
 
 After everything above is done, launch the tmpnb setup:
 
+#### Grab the images
+
+```
+docker pull jupyter/nature-demo
+docker pull jupyter/configurable-http-proxy
+docker pull jupyter/tmpnb
+```
+
+#### LAUNCH!
+
 ```
 docker run -d --name configproxy --net=host -e CONFIGPROXY_AUTH_TOKEN=LEGIT_KEY jupyter/configurable-http-proxy --default-target http://127.0.0.1:9999
-docker run -d --name tmpnb --net=host -e CONFIGPROXY_AUTH_TOKEN=LEGIT_KEY -v /var/run/docker.sock:/docker.sock jupyter/tmpnb python orchestrate.py --cull-timeout=120 --docker-version=1.13 --pool-size=512 --image=jupyter/nature-demo --static-files=/srv/ipython/IPython/html/static/ --redirect-uri=/notebooks/Nature.ipynb --command='ipython3 notebook --NotebookApp.base_url={base_path}' --max-dock-workers=8
+docker run -d --name tmpnb --net=host -e CONFIGPROXY_AUTH_TOKEN=LEGIT_KEY -v /var/run/docker.sock:/docker.sock jupyter/tmpnb python orchestrate.py --cull-timeout=120 --cull-period=180 --docker-version=1.13 --pool-size=512 --image=jupyter/nature-demo --static-files=/srv/ipython/IPython/html/static/ --redirect-uri=/notebooks/Nature.ipynb --command='ipython3 notebook --NotebookApp.base_url={base_path}' --max-dock-workers=8
 ```
