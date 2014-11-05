@@ -3,7 +3,7 @@ If using Ubuntu (as in production right now), launch an OnMetal Memory machine u
 
 ## Ubuntu configuration
 
-Apply updates
+Apply updates and #1 best admin tool
 
 ```
 apt-get update && apt-get install -y vim
