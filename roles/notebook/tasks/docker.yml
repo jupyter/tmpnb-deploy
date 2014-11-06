@@ -25,6 +25,12 @@
   apt: update_cache=yes name=lxc-docker
   sudo: yes
 
+- name: install docker configuration
+  copy: src=docker dest=/etc/default/docker mode=0644
+  sudo: yes
+  notify:
+  - restart docker
+
 - name: python
   apt: name=python state=latest
   sudo: yes
