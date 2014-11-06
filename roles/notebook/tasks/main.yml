@@ -59,7 +59,8 @@
     env:
       CONFIGPROXY_AUTH_TOKEN: "{{ configproxy_auth_token }}"
     volumes: /var/run/docker.sock:/docker.sock
-    command: python orchestrate.py
+    command: >
+      python orchestrate.py
       --pool_size={{ tmpnb_pool_size }}
       --cull_timeout={{ tmpnb_cull_timeout }}
       --cull_period={{ tmpnb_cull_period }}
@@ -67,5 +68,5 @@
       --docker_version={{ tmpnb_docker_version }}
       --static_files={{ tmpnb_static_files }}
       --redirect_uri={{ tmpnb_redirect_uri }}
-      --command={{ tmpnb_command }}
+      --command='{{ tmpnb_command }}'
       --max_dock_workers={{ tmpnb_max_dock_workers }}
