@@ -1,0 +1,8 @@
+---
+- hosts: tmpnb
+	roles:
+	- tmpnb
+
+- hosts: nginx
+	roles:
+	- loadbalancer
