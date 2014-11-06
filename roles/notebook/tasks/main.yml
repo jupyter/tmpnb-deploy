@@ -10,6 +10,7 @@
 - name: apply changed grub settings
   command: update-grub
   sudo: yes
+  when: grubbed | changed
 
 - include: docker.yml
 
@@ -31,6 +32,7 @@
 
 - name: wait for server to relaunch
   local_action: wait_for host={{ inventory_hostname }} state=started
+  when: grubbed | changed
 
 - name: iptables configuration
   command: iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 8000
