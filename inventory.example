@@ -1,0 +1,5 @@
+[notebook]
+notebook_server ansible_ssh_user=root ansible_ssh_host=<public IP>
+
+[nginx]
+proxy_server ansible_ssh_user=root ansible_ssh_host=<public IP> notebook_host=<snet IP of notebook>
