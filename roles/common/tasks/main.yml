@@ -1,0 +1,14 @@
+---
+- name: install vim for ops sanity
+  apt: update_cache=yes cache_valid_time=600 name=vim state=latest
+  sudo: yes
+
+- name: YOLO system upgrade
+  apt: upgrade=safe
+  sudo: yes
+
+- name: sshd configuration
+  copy: src=sshd_config dest=/etc/ssh/sshd_config mode=0644
+  sudo: yes
+  notify:
+  - restart sshd

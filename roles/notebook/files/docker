@@ -1,0 +1,3 @@
+# Docker Upstart and SysVinit configuration file
+
+DOCKER_OPTS="--icc=false"

@@ -1,0 +1,51 @@
+---
+- name: see if HTTPS transport is already present
+  stat: path=/usr/lib/apt/methods/https get_md5=false
+  register: https_transport_file
+
+- name: ensure HTTPS transport is available to apt
+  apt: update_cache=yes cache_valid_time=600 name=apt-transport-https
+  sudo: yes
+  when: not https_transport_file.stat.exists
+
+- name: ensure the docker apt key is trusted
+  apt_key:
+    keyserver: hkp://keyserver.ubuntu.com:80
+    id: 36A1D7869245C8950F966E92D8576A8BA88D21E9
+    state: present
+  sudo: yes
+
+- name: ensure the docker apt repository is present
+  apt_repository:
+    repo: deb https://get.docker.com/ubuntu docker main
+    state: present
+  sudo: yes
+
+- name: install docker
+  apt: update_cache=yes name=lxc-docker
+  sudo: yes
+
+- name: install docker configuration
+  copy: src=docker dest=/etc/default/docker mode=0644
+  sudo: yes
+  register: dockerconf
+
+- name: restart docker
+  service: name=docker state=restarted
+  sudo: yes
+  when: dockerconf | changed
+
+- name: python
+  apt: name=python state=latest
+  sudo: yes
+
+- name: pip install script
+  get_url: dest=/tmp/get_pip.py url=https://bootstrap.pypa.io/get-pip.py
+
+- name: pip
+  command: python /tmp/get_pip.py creates=/usr/local/bin/pip
+  sudo: yes
+
+- name: docker-py
+  pip: name=docker-py state=latest
+  sudo: yes
