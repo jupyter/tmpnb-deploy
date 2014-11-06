@@ -15,7 +15,7 @@
 - include: docker.yml
 
 - name: pull docker images
-  docker: image={{ item }} state=present
+  command: docker pull {{ item }}
   with_items:
   - jupyter/nature-demo
   - jupyter/configurable-http-proxy
