@@ -1,10 +1,14 @@
 ---
 - hosts: notebook
+  vars_files:
+  - ['secrets.yml', 'secrets.vault.yml']
   roles:
   - common
   - notebook
 
 - hosts: nginx
+  vars_files:
+  - ['secrets.yml', 'secrets.vault.yml']
   roles:
   - common
   - nginx
