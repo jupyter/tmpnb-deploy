@@ -28,8 +28,12 @@
 - name: install docker configuration
   copy: src=docker dest=/etc/default/docker mode=0644
   sudo: yes
-  notify:
-  - restart docker
+  register: dockerconf
+
+- name: restart docker
+  service: name=docker state=restarted
+  sudo: yes
+  when: dockerconf | changed
 
 - name: python
   apt: name=python state=latest
