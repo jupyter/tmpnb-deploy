@@ -6,9 +6,9 @@
   - common
   - notebook
 
-- hosts: nginx
+- hosts: proxy
   vars_files:
   - ['secrets.yml', 'secrets.vault.yml']
   roles:
   - common
-  - nginx
+  - proxy
