@@ -66,6 +66,6 @@
       --image={{ tmpnb_image }}
       --docker_version={{ tmpnb_docker_version }}
       --static_files={{ tmpnb_static_files }}
-      --redirect_url={{ tmpnb_redirect_uri }}
+      --redirect_uri={{ tmpnb_redirect_uri }}
       --command={{ tmpnb_command }}
       --max_dock_workers={{ tmpnb_max_dock_workers }}
