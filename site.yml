@@ -1,8 +1,10 @@
 ---
-- hosts: tmpnb
-	roles:
-	- tmpnb
+- hosts: notebook
+  roles:
+  - common
+  - notebook
 
 - hosts: nginx
-	roles:
-	- loadbalancer
+  roles:
+  - common
+  - nginx
