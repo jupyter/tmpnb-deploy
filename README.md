@@ -18,6 +18,11 @@ curl -sSL https://get.docker.com/ubuntu/ | sudo sh
 docker pull jupyter/nature-demo
 docker pull jupyter/configurable-http-proxy
 docker pull jupyter/tmpnb
+```
+
+Edit `/etc/default/docker` to add `--icc=false` to `DOCKER_OPTS`.
+
+```
 reboot
 ```
 
