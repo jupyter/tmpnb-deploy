@@ -1,9 +1,32 @@
 ---
-- name: install nginx
+- name: nginx
   apt: name=nginx state=present
   sudo: yes
 
-- name: ensure the data directories exist
-  file: state=directory path=/var/www/nature-demo
+- name: data directories
+  file: state=directory path={{ static_path }} mode=0755
+  sudo: yes
 
-# TODO untar static.tar
+# TODO get static resources from the docker container
+# TODO CDN these with Magic
+
+- name: unpack the static assets
+  unarchive: src=static.tar dest={{ static_path }}
+  sudo: yes
+
+- name: SSL credentials
+  template: src={{ item.from }} dest={{ item.to }} mode=0644
+  with_items:
+  - from: tmpnb.org.key.j2
+    to: "{{ ssl_key_path }}"
+  - from: tmpnb.org.crt.j2
+    to: "{{ ssl_cert_path }}"
+  sudo: yes
+  notify:
+  - restart nginx
+
+- name: nginx configuration
+  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/default mode=0644
+  sudo: yes
+  notify:
+  - restart nginx

@@ -1,0 +1,54 @@
+server {
+    listen 80;
+    server_name {{ inventory_hostname }};
+    rewrite        ^ https://$host$request_uri? permanent;
+}
+
+server {
+    listen 443;
+
+    client_max_body_size 50M;
+
+    server_name {{ inventory_hostname }};
+
+    ssl on;
+    ssl_certificate {{ ssl_cert_path }};
+    ssl_certificate_key {{ ssl_key_path }};
+    ssl_session_timeout 5m;
+    ssl_protocols SSLv2 SSLv3 TLSv1;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    error_log /var/log/nginx/error.log;
+
+    location ~ /(user-[a-zA-Z0-9]*)/static(.*) {
+        alias {{ static_path }}/static$2;
+    }
+
+    location / {
+        proxy_pass http://{{ notebook_host }}:8000;
+
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_set_header X-NginX-Proxy true;
+    }
+
+    location ~* /(user-[a-zA-Z0-9]*)/(api/kernels|terminals/websocket)/ {
+        proxy_pass http://{{ notebook_host }}:8000;
+
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_set_header X-NginX-Proxy true;
+
+        # WebSocket support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_read_timeout 86400;
+
+    }
+}
