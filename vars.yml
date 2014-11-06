@@ -1,0 +1,12 @@
+---
+# Configuration parameters for containers.
+
+tmpnb_pool_size: 512
+tmpnb_cull_timeout: 120
+tmpnb_cull_period: 600
+tmpnb_image: jupyter/nature-demo
+tmpnb_static_files: /srv/ipython/IPython/html/static/
+tmpnb_redirect_uri: /notebooks/Nature.ipynb
+tmpnb_command: ipython3 notebook --NotebookApp.base_url={base_path}
+tmpnb_max_dock_workers: 8
+tmpnb_docker_version: 1.13
