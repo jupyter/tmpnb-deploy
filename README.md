@@ -1,7 +1,13 @@
+Single tmpnb setup is currently:
 
-If using Ubuntu (as in production right now), launch an OnMetal Memory machine using Ubuntu 14.04 then roll through this:
+* nginx on one server for SSL termination, has a DNS record associated
+* tmpnb on another server
+
+Outside of those, we use the [tmpnb-redirector](https://github.com/jupyter/tmpnb-redirector) to redirect to these new nodes.
 
 ## tmpnb node configuration
+
+Launch an OnMetal Memory machine using Ubuntu 14.04 then roll through this:
 
 ```
 apt-get update && apt-get install -y vim
