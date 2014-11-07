@@ -1,4 +1,6 @@
 ---
+# Override these values by copying to vars.local.yml.
+
 # Configuration parameters for containers.
 
 tmpnb_pool_size: 64
