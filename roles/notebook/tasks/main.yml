@@ -70,3 +70,5 @@
       --redirect_uri={{ tmpnb_redirect_uri }}
       --command='{{ tmpnb_command }}'
       --max_dock_workers={{ tmpnb_max_dock_workers }}
+      --mem-limit={{ tmpnb_mem_limit }}
+      --cpu-shares={{ tmpnb_cpu_shares }}
