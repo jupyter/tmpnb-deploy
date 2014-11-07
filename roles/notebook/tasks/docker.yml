@@ -30,6 +30,12 @@
   sudo: yes
   register: dockerconf
 
+# This *shouldn't* be necessary because of the DOCKER_OPTS we set.
+# Just for good measure, though.
+- name: disable IP forwarding
+  shell: echo 0 > /proc/sys/net/ipv4/ip_forward
+  sudo: yes
+
 - name: restart docker
   service: name=docker state=restarted
   sudo: yes
