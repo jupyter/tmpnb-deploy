@@ -2,7 +2,7 @@
 - hosts: notebook
   vars_files:
   - ['secrets.yml', 'secrets.vault.yml']
-  - vars.yml
+  - ['vars.local.yml', 'vars.yml']
   roles:
   - common
   - notebook
@@ -10,7 +10,7 @@
 - hosts: proxy
   vars_files:
   - ['secrets.yml', 'secrets.vault.yml']
-  - vars.yml
+  - ['vars.local.yml', 'vars.yml']
   roles:
   - common
   - proxy
