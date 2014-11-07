@@ -14,3 +14,10 @@ tmpnb_max_dock_workers: 8
 tmpnb_docker_version: 1.13
 tmpnb_cpu_shares: 16
 tmpnb_mem_limit: 512m
+
+# GitHub users to grab public keys from
+
+github_usernames:
+- rgbkrk
+- smashwilson
+- minrk
