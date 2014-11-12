@@ -38,7 +38,7 @@ apt-get upgrade -y #yolo
 sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"/' /etc/default/grub
 update-grub
 curl -sSL https://get.docker.com/ubuntu/ | sudo sh
-docker pull jupyter/nature-demo # Change your image here
+docker pull jupyter/demo # Change your image here
 docker pull jupyter/configurable-http-proxy
 docker pull jupyter/tmpnb
 ```
