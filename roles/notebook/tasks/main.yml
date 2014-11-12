@@ -14,12 +14,15 @@
 
 - include: docker.yml
 
-- name: pull docker images
+- name: pull tmpnb service images
   command: docker pull {{ item }}
   with_items:
-  - {{ tmpnb_image }}
   - jupyter/configurable-http-proxy
   - jupyter/tmpnb
+  sudo: yes
+
+- name: pull docker image for user containers
+  command: docker pull {{ tmpnb_image }}
   sudo: yes
 
 - name: reboot
