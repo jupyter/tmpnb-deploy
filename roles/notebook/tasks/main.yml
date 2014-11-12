@@ -17,7 +17,7 @@
 - name: pull docker images
   command: docker pull {{ item }}
   with_items:
-  - jupyter/nature-demo
+  - {{ tmpnb_image }}
   - jupyter/configurable-http-proxy
   - jupyter/tmpnb
   sudo: yes
