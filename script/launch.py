@@ -119,4 +119,9 @@ if __name__ == "__main__":
                         help='domain to host the servers on')
 
     args = parser.parse_args()
-    launch_node(**args)
+    launch_node(prefix=args.prefix, 
+                region=args.region,
+                node_num=args.node_num,
+                domain=args.domain
+    )
+
