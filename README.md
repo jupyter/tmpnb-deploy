@@ -15,7 +15,7 @@ This is also set up for our own use, which means it may not work well for your o
 
 :warning: Note: you'll need to install Ansible from source (`devel` branch) to get the current versions of the Docker modules.
 
-### Easy mode
+### "Easy" mode
 
 ```
 script/deploy
