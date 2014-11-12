@@ -93,7 +93,9 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
 
     print(inventory)
 
-    pyrax.set_credentials(os.environ["OS_DNS_USERNAME"], os.environ["OS_DNS_PASSWORD"])
+    # If a separate account is used for DNS, use that instead
+    if("OS_DNS_USERNAME" in os.environ and "OS_DNS_PASSWORD" in os.environ):
+        pyrax.set_credentials(os.environ["OS_DNS_USERNAME"], os.environ["OS_DNS_PASSWORD"])
 
     dns = pyrax.cloud_dns.find(name=domain)
     dns.add_record({'type': 'A',
