@@ -53,7 +53,7 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
     proxy_image = [image for image in ubs if "PVHVM" in image.name][0]
 
     user_server_name, proxy_server_name = name_new_nodes(prefix=prefix,
-                                                         region.lower(),
+                                                         region=region.lower(),
                                                          node_num=node_num,
                                                          domain=domain)
 
