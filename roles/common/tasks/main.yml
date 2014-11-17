@@ -23,3 +23,5 @@
 - name: assemble the authorized keys file
   assemble: dest=/root/.ssh/authorized_keys mode=0600 src=/tmp/pubkeys
   sudo: yes
+
+- include: docker.yml
