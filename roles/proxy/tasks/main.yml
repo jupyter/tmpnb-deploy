@@ -36,4 +36,4 @@
     volumes: "{{ nginx_volumes }}"
     ports: "{{ nginx_ports }}"
     volumes_from:
-    - static_files
+    - static-files
