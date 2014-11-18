@@ -2,12 +2,12 @@
 # Get static resources from the userland container
 - name: static files container
   docker:
-    image: {{ tmpnb_image }}
+    image: "{{ tmpnb_image }}"
     state: running
     name: static-files
     command: echo "#lifehacks"
     volumes:
-    - {{ user_static_files }}
+    - "{{ user_static_files }}"
         
 # {{ static_path }}
 
