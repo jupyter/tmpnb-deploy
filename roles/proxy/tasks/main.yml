@@ -1,18 +1,15 @@
 ---
-- name: nginx
-  apt: name=nginx state=present
-  sudo: yes
-
-- name: data directories
-  file: state=directory path={{ static_path }} mode=0755
-  sudo: yes
-
-# TODO get static resources from the docker container
-# TODO CDN these with Magic
-
-- name: unpack the static assets
-  unarchive: src=static.tar dest={{ static_path }}
-  sudo: yes
+# Get static resources from the userland container
+- name: static files container
+  docker:
+    image: {{ tmpnb_image }}
+    state: running
+    name: static-files
+    command: echo "#lifehacks"
+    volumes:
+    - {{ user_static_files }}
+        
+# {{ static_path }}
 
 - name: SSL credentials
   template: src={{ item.from }} dest={{ item.to }} mode=0644
@@ -26,16 +23,17 @@
   - restart nginx
 
 - name: nginx configuration
-  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/default mode=0644
+  template: src=nginx.conf.j2 dest={{ nginx_config_dir }}/nginx.conf mode=0644
   sudo: yes
   notify:
   - restart nginx
-
-- name: static files container
+ 
+- name: launch nginx
   docker:
-    image: {{ tmpnb_image }}
+    image: nginx
     state: running
-    name: static-files
-    command: echo "#lifehacks"
-    volumes:
-    - {{ user_static_files }}
+    name: nginx
+    volumes: "{{ nginx_volumes }}"
+    ports: "{{ nginx_ports }}"
+    volumes_from:
+    - static_files
