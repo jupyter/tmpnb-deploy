@@ -30,3 +30,12 @@
   sudo: yes
   notify:
   - restart nginx
+
+- name: static files container
+  docker:
+    image: {{ tmpnb_image }}
+    state: running
+    name: static-files
+    command: echo "#lifehacks"
+    volumes:
+    - /data
