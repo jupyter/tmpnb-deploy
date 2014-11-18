@@ -6,6 +6,8 @@ user_static_files: /srv/ipython/IPython/html/static
 nginx_config_dir: /etc/nginx
 nginx_volumes:
 - "{{ nginx_config_dir }}/nginx.conf:/etc/nginx/nginx.conf:ro"
+- "{{ ssl_key_path }}:{{ ssl_key_path }}"
+- "{{ ssl_cert_path }}:{{ ssl_cert_path }}"
 nginx_ports:
 - 80:80
 - 443:443
