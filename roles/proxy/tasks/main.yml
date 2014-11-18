@@ -1,4 +1,8 @@
 ---
+- name: pull docker image for user containers
+  command: docker pull {{ tmpnb_image }}
+  sudo: yes
+
 # Get static resources from the userland container
 - name: static files container
   docker:
