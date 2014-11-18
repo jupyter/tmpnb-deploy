@@ -12,8 +12,12 @@
     command: echo "#lifehacks"
     volumes:
     - "{{ user_static_files }}"
-        
-# {{ static_path }}
+
+- name: configuration directories
+  file: state=directory dest={{ item }} mode=0755
+  with_items:
+  - "{{ nginx_config_dir }}"
+  sudo: yes
 
 - name: SSL credentials
   template: src={{ item.from }} dest={{ item.to }} mode=0644
@@ -23,14 +27,10 @@
   - from: tmpnb.org.crt.j2
     to: "{{ ssl_cert_path }}"
   sudo: yes
-  notify:
-  - restart nginx
 
 - name: nginx configuration
   template: src=nginx.conf.j2 dest={{ nginx_config_dir }}/nginx.conf mode=0644
   sudo: yes
-  notify:
-  - restart nginx
  
 - name: launch nginx
   docker:
