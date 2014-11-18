@@ -11,6 +11,18 @@
   command: update-grub
   sudo: yes
   when: grubbed | changed
+  
+- name: reboot
+  command: shutdown -r now "Ansible updated grub"
+  async: 0
+  poll: 0
+  sudo: yes
+  ignore_errors: true
+  when: grubbed | changed
+
+- name: wait for server to relaunch
+  local_action: wait_for host={{ inventory_hostname }} state=started
+  when: grubbed | changed
 
 - include: docker.yml
 
@@ -25,17 +37,6 @@
   command: docker pull {{ tmpnb_image }}
   sudo: yes
 
-- name: reboot
-  command: shutdown -r now "Ansible updated grub"
-  async: 0
-  poll: 0
-  sudo: yes
-  ignore_errors: true
-  when: grubbed | changed
-
-- name: wait for server to relaunch
-  local_action: wait_for host={{ inventory_hostname }} state=started
-  when: grubbed | changed
 
 - name: iptables configuration
   command: iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 8000
