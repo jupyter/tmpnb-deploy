@@ -9,9 +9,9 @@
     image: "{{ tmpnb_image }}"
     state: running
     name: static-files
-    command: echo "#lifehacks"
+    command: echo "#data-container-hack"
     volumes:
-    - "{{ user_static_files }}"
+    - "{{ tmpnb_static_files }}"
 
 - name: configuration directories
   file: state=directory dest={{ item }} mode=0755

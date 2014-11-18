@@ -38,7 +38,7 @@ http {
         error_log /var/log/nginx/error.log;
 
         location ~ /(user-[a-zA-Z0-9]*)/static(.*) {
-            alias {{ user_static_files }}$2;
+            alias {{ tmpnb_static_files }}$2;
         }
 
         location / {
