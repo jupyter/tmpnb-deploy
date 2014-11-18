@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 
-worker_processes  {{ ansible_processor_cores*2 }};
+worker_processes  {{ ansible_processor_count*2 }};
 
 events {
   worker_connections 1024;
