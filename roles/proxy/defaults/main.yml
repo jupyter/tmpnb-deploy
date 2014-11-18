@@ -2,3 +2,4 @@
 ssl_cert_path: /etc/ssl/tmpnb.org.crt
 ssl_key_path: /etc/ssl/tmpnb.org.key
 static_path: /var/www/nature-demo
+user_static_files: /srv/ipython/IPython/html/static

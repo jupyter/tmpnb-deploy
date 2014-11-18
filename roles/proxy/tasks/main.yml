@@ -38,4 +38,4 @@
     name: static-files
     command: echo "#lifehacks"
     volumes:
-    - /data
+    - {{ user_static_files }}
