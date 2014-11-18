@@ -1,4 +1,3 @@
----
-- name: restart nginx
-  service: name=nginx state=restarted
+- name: reload nginx configuration
+  command: docker kill -s HUP nginx
   sudo: yes

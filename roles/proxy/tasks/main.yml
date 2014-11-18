@@ -1,17 +1,22 @@
 ---
-- name: nginx
-  apt: name=nginx state=present
+- name: pull docker image for user containers
+  command: docker pull {{ tmpnb_image }}
   sudo: yes
 
-- name: data directories
-  file: state=directory path={{ static_path }} mode=0755
-  sudo: yes
+# Get static resources from the userland container
+- name: static files container
+  docker:
+    image: "{{ tmpnb_image }}"
+    state: running
+    name: static-files
+    command: echo "#data-container-hack"
+    volumes:
+    - "{{ tmpnb_static_files }}"
 
-# TODO get static resources from the docker container
-# TODO CDN these with Magic
-
-- name: unpack the static assets
-  unarchive: src=static.tar dest={{ static_path }}
+- name: configuration directories
+  file: state=directory dest={{ item }} mode=0755
+  with_items:
+  - "{{ nginx_config_dir }}"
   sudo: yes
 
 - name: SSL credentials
@@ -23,10 +28,20 @@
     to: "{{ ssl_cert_path }}"
   sudo: yes
   notify:
-  - restart nginx
+  - reload nginx configuration
 
 - name: nginx configuration
-  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/default mode=0644
+  template: src=nginx.conf.j2 dest={{ nginx_config_dir }}/nginx.conf mode=0644
   sudo: yes
   notify:
-  - restart nginx
+  - reload nginx configuration
+ 
+- name: launch nginx
+  docker:
+    image: nginx
+    state: running
+    name: nginx
+    volumes: "{{ nginx_volumes }}"
+    ports: "{{ nginx_ports }}"
+    volumes_from:
+    - static-files
