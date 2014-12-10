@@ -26,7 +26,8 @@ import pyrax
 
 def name_new_nodes(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
     # The naming problem
-    node_naming_scheme = "{prefix}-{region}-{node_num:03}"
+    #node_naming_scheme = "{prefix}-{region}-{node_num:03}"
+    node_naming_scheme = "{prefix}"
     node_base_name = node_naming_scheme.format(**locals())
 
     user_server_name  = node_base_name + "-user" + "." + domain
