@@ -3,17 +3,17 @@
 
 # Configuration parameters for containers.
 
-tmpnb_pool_size: 64
+tmpnb_pool_size: 32
 tmpnb_cull_timeout: 120
 tmpnb_cull_period: 600
 tmpnb_image: jupyter/demo
 tmpnb_static_files: /srv/ipython/IPython/html/static/
-tmpnb_redirect_uri: /notebooks/Welcome.ipynb
+tmpnb_redirect_uri: /tree
 tmpnb_command: ipython3 notebook --NotebookApp.base_url={base_path}
 tmpnb_max_dock_workers: 8
 tmpnb_docker_version: 1.13
-tmpnb_cpu_shares: 16
-tmpnb_mem_limit: 512m
+tmpnb_cpu_shares: 32
+tmpnb_mem_limit: 1024m
 
 # GitHub users to grab public keys from
 
