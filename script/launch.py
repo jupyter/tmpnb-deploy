@@ -36,7 +36,7 @@ def name_new_nodes(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
     return user_server_name, proxy_server_name
 
 def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
-    key_name = "team"
+    key_name = "main"
 
     pyrax.set_setting("identity_type", "rackspace")
     pyrax.set_credentials(os.environ["OS_USERNAME"], os.environ["OS_PASSWORD"])
