@@ -37,7 +37,7 @@ http {
         access_log /var/log/nginx/access.log;
         error_log /var/log/nginx/error.log;
 
-        location ~ /(user-[a-zA-Z0-9]*)/static(.*) {
+        location ~ /(user[-/][a-zA-Z0-9]*)/static(.*) {
             alias {{ tmpnb_static_files }}$2;
         }
 
@@ -51,7 +51,7 @@ http {
             proxy_set_header X-NginX-Proxy true;
         }
 
-        location ~* /(user-[a-zA-Z0-9]*)/(api/kernels|terminals/websocket)/ {
+        location ~* /(user[-/][a-zA-Z0-9]*)/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/ {
             proxy_pass http://{{ notebook_host }}:8000;
 
             proxy_set_header X-Real-IP $remote_addr;
