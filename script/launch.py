@@ -80,7 +80,7 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
     }
 
     inventory = '''[notebook]
-{user_server_name} ansible_ssh_user=root ansible_ssh_host={notebook_server_public} configproxy_auth_token={token}
+{user_server_name} ansible_ssh_user=root ansible_ssh_host={notebook_server_public} configproxy_auth_token={token} notebook_host={notebook_server_private}
 
 [proxy]
 {proxy_server_name} ansible_ssh_user=root ansible_ssh_host={proxy_server_public} notebook_host={notebook_server_private}

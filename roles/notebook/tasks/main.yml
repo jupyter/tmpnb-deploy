@@ -51,7 +51,7 @@
     name: configproxy
     env:
       CONFIGPROXY_AUTH_TOKEN: "{{ configproxy_auth_token }}"
-    command: --default-target http://127.0.0.1:9999
+    command: --default-target http://127.0.0.1:9999 --ip="{{ notebook_host }}"
 
 - name: tmpnb
   docker:
@@ -76,3 +76,4 @@
       --max_dock_workers={{ tmpnb_max_dock_workers }}
       --mem-limit={{ tmpnb_mem_limit }}
       --cpu-shares={{ tmpnb_cpu_shares }}
+      --ip="127.0.0.1"
