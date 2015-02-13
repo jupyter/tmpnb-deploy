@@ -10,7 +10,7 @@ tmpnb_static_files: /srv/ipython/IPython/html/static/
 tmpnb_redirect_uri: /tree
 tmpnb_command: ipython3 notebook --NotebookApp.base_url={base_path}
 tmpnb_max_dock_workers: 8
-tmpnb_docker_version: 1.13
+tmpnb_docker_version: 1.17
 
 tmpnb_pool_size: 64
 tmpnb_cpu_shares: 16
