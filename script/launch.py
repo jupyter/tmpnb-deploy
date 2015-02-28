@@ -60,7 +60,7 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
 
     # Launch the servers
     proxy_server = cs.servers.create(proxy_server_name, image=proxy_image.id, flavor='performance2-15', key_name=key_name)
-    user_server = cs.servers.create(user_server_name, image=user_image.id, flavor='onmetal-compute1', key_name=key_name)
+    user_server = cs.servers.create(user_server_name, image=user_image.id, flavor='onmetal-memory1', key_name=key_name)
 
     # Wait on them
     print("Waiting on Proxy server")
