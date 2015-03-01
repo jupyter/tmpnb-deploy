@@ -14,7 +14,7 @@ tmpnb_docker_version: 1.17
 
 tmpnb_pool_size: 256
 tmpnb_cpu_shares: 4
-tmpnb_mem_limit: 2048
+tmpnb_mem_limit: "2048m"
 
 # GitHub users to grab public keys from
 
