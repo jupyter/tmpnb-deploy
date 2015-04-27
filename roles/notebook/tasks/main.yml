@@ -44,7 +44,8 @@
 
 - name: configproxy
   docker:
-    state: running
+    state: reloaded
+    pull: always
     image: jupyter/configurable-http-proxy
     detach: true
     net: host
@@ -58,7 +59,8 @@
 
 - name: tmpnb
   docker:
-    state: running
+    state: reloaded
+    pull: always
     image: jupyter/tmpnb
     detach: true
     net: host

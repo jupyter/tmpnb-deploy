@@ -7,7 +7,8 @@
 - name: static files container
   docker:
     image: "{{ tmpnb_image }}"
-    state: running
+    state: reloaded
+    pull: always
     name: static-files
     command: echo "#data-container-hack"
     volumes:
@@ -39,7 +40,8 @@
 - name: launch nginx
   docker:
     image: nginx
-    state: running
+    state: reloaded
+    pull: always
     name: nginx
     volumes: "{{ nginx_volumes }}"
     ports: "{{ nginx_ports }}"
