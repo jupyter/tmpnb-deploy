@@ -6,14 +6,14 @@
 tmpnb_cull_timeout: 120
 tmpnb_cull_period: 600
 tmpnb_image: jupyter/demo
-tmpnb_static_files: /opt/conda/lib/python3.4/site-packages/IPython/html/static
+tmpnb_static_files: /opt/conda/lib/python3.4/site-packages/IPython/html/static/
 tmpnb_redirect_uri: /tree
 tmpnb_command: ipython3 notebook --NotebookApp.base_url={base_path}
 tmpnb_max_dock_workers: 8
 tmpnb_docker_version: 1.17
 
 tmpnb_pool_size: 256
-tmpnb_cpu_shares: 4
+tmpnb_cpu_shares: 16 # Overprovision, should be 4
 tmpnb_mem_limit: "2048m"
 
 # GitHub users to grab public keys from
