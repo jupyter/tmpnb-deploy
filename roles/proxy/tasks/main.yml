@@ -35,10 +35,21 @@
   sudo: yes
   notify:
   - reload nginx configuration
+
+- name: copy the Dockerfile to the nginx configuration directory
+  template: src=Dockerfile_nginx.j2 dest={{ nginx_config_dir }}/Dockerfile mode=0644
+  sudo: yes
+
+- name: build tmpnb nginx image
+  docker_image:
+    path: "{{ nginx_config_dir }}"
+    name: tmpnb_nginx
+    state: build
+  sudo: yes
  
 - name: launch nginx
   docker:
-    image: nginx
+    image: tmpnb_nginx
     state: running
     name: nginx
     volumes: "{{ nginx_volumes }}"
