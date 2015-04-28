@@ -42,7 +42,7 @@
 
 - name: build tmpnb nginx image
   docker_image:
-    path: {{ nginx_config_dir }}
+    path: "{{ nginx_config_dir }}"
     name: tmpnb_nginx
     state: build
   sudo: yes
