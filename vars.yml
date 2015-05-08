@@ -3,8 +3,8 @@
 
 # Configuration parameters for containers.
 
-tmpnb_cull_timeout: 110
-tmpnb_cull_period: 300
+tmpnb_cull_timeout: 120
+tmpnb_cull_period: 400
 tmpnb_image: jupyter/demo
 tmpnb_static_files: /opt/conda/lib/python3.4/site-packages/IPython/html/static/
 tmpnb_redirect_uri: /tree
