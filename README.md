@@ -2,7 +2,7 @@
 
 This repository contains an Ansible playbook for launching assets to *.tmpnb.org.
 
-Single tmpnb setup is currently:
+Single [tmpnb](https://github.com/jupyter/tmpnb) setup is currently:
 
 * nginx on one server for SSL termination, has a DNS record associated
 * tmpnb on another server
