@@ -13,8 +13,8 @@ tmpnb_max_dock_workers: 8
 tmpnb_docker_version: 1.18
 
 tmpnb_pool_size: 512
-tmpnb_cpu_shares: 16 # Overprovision, should be 2
-tmpnb_mem_limit: "1024m"
+tmpnb_cpu_shares: 32 # Overprovision, should be 2
+tmpnb_mem_limit: "512m"
 
 # GitHub users to grab public keys from
 
