@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ROOT=$(dirname $0)/..
+
+if [ ! -e ${ROOT}//inventory ]; then
+  echo "Please create an inventory file with your hosts."
+  echo " cp inventory.example inventory"
+  exit 1
+fi
+
+exec ansible notebook -m shell -a 'docker pull jupyter/demo; docker images -f "dangling=true" -q | xargs docker rmi' -i ${ROOT}/inventory
