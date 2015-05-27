@@ -82,3 +82,4 @@
       --mem-limit={{ tmpnb_mem_limit }}
       --cpu-shares={{ tmpnb_cpu_shares }}
       --ip="127.0.0.1"
+      --allow-origin='*'
