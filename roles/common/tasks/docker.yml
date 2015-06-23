@@ -22,7 +22,7 @@
   sudo: yes
 
 - name: install docker
-  apt: update_cache=yes name=lxc-docker
+  apt: update_cache=yes name=lxc-docker-1.6.2
   sudo: yes
 
 - name: python
