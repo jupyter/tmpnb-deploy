@@ -8,7 +8,7 @@ tmpnb_cull_period: 400
 tmpnb_image: jupyter/demo
 tmpnb_static_files: /opt/conda/lib/python3.4/site-packages/IPython/html/static/
 tmpnb_redirect_uri: /tree
-tmpnb_command: start-notebook.sh --NotebookApp.base_url={base_path} --NotebookApp.allow_origin='*' --port={port}
+tmpnb_command: start-notebook.sh "--NotebookApp.base_url={base_path} --NotebookApp.allow_origin='*' --port={port}"
 tmpnb_max_dock_workers: 8
 tmpnb_docker_version: "auto"
 
