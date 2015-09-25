@@ -10,7 +10,7 @@ tmpnb_static_files: /opt/conda/lib/python3.4/site-packages/IPython/html/static/
 tmpnb_redirect_uri: /tree
 tmpnb_command: start-notebook.sh --NotebookApp.base_url={base_path} --NotebookApp.allow_origin='*' --port={port}
 tmpnb_max_dock_workers: 8
-tmpnb_docker_version: 1.18
+tmpnb_docker_version: "auto"
 
 tmpnb_pool_size: 512
 tmpnb_cpu_shares: 32 # Overprovision, should be 2
