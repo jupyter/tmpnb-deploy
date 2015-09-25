@@ -3,16 +3,6 @@
   command: docker pull {{ tmpnb_image }}
   sudo: yes
 
-# Get static resources from the userland container
-- name: static files container
-  docker:
-    image: "{{ tmpnb_image }}"
-    state: running
-    name: static-files
-    command: echo "#data-container-hack"
-    volumes:
-    - "{{ tmpnb_static_files }}"
-
 - name: configuration directories
   file: state=directory dest={{ item }} mode=0755
   with_items:
@@ -54,5 +44,3 @@
     name: nginx
     volumes: "{{ nginx_volumes }}"
     ports: "{{ nginx_ports }}"
-    volumes_from:
-    - static-files

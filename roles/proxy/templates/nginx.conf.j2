@@ -45,7 +45,7 @@ http {
         error_log /var/log/nginx/error.log;
 
         location ~ /(user[-/][a-zA-Z0-9]*)/static/(.*) {
-            alias {{ tmpnb_static_files }}$2;
+            proxy_pass https://cdn.jupyter.org/notebook/try-4.0.4/$2;
         }
 
         location / {
