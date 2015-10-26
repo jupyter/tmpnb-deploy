@@ -44,3 +44,4 @@
     name: nginx
     volumes: "{{ nginx_volumes }}"
     ports: "{{ nginx_ports }}"
+    restart_policy: always
