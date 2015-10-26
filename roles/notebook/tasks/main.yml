@@ -50,6 +50,7 @@
     detach: true
     net: host
     name: configproxy
+    restart_policy: always
     env:
       CONFIGPROXY_AUTH_TOKEN: "{{ configproxy_auth_token }}"
     command: >
@@ -65,6 +66,7 @@
     detach: true
     net: host
     name: tmpnb
+    restart_policy: always
     env:
       CONFIGPROXY_AUTH_TOKEN: "{{ configproxy_auth_token }}"
     volumes: /var/run/docker.sock:/docker.sock
