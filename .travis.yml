@@ -1,0 +1,9 @@
+language: python
+python: "2.7"
+sudo: false
+install:
+  - pip install ansible
+before_script:
+  - cp secrets.vault.example secrets.yml
+script:
+  - ansible-playbook -i "localhost," site.yml --syntax-check
