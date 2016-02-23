@@ -1,3 +1,4 @@
-# Docker Upstart and SysVinit configuration file
+# Docker init file
 
+# Turn off networking for userland containers by default
 DOCKER_OPTS="--icc=false --ip-forward=false"
