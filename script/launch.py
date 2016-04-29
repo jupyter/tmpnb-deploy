@@ -110,13 +110,13 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Launch nodes for tmpnb')
 
-    parser.add_argument('prefix', type=str, default='demo',
+    parser.add_argument('--prefix', type=str, default='tmp',
                         help='prefix in the URL base')
-    parser.add_argument('region', type=str, default='iad',
+    parser.add_argument('--region', type=str, default='iad',
                         help='region to deploy to, also part of the domain name')
-    parser.add_argument('node_num', metavar='N', type=int,
+    parser.add_argument('node_num', type=int,
                         help='what this set of servers will be identified as numerically')
-    parser.add_argument('domain', type=str, default="tmpnb.org",
+    parser.add_argument('--domain', type=str, default="tmpnb.org",
                         help='domain to host the servers on')
 
     args = parser.parse_args()
