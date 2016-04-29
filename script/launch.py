@@ -91,8 +91,13 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
            user_server_name=user_server_name,
            proxy_server_name=proxy_server_name,
     )
-
-    print(inventory)
+    
+    inventory_name = 'inventory-%s' % proxy_server_name
+    with open(inventory_name, 'w') as f:
+        f.write(inventory)
+    
+    print("Deploy tmpnb on this node with with:")
+    print("  INVENTORY=%s ./script/deploy" % inventory_name)
 
     # If a separate account is used for DNS, use that instead
     if("OS_DNS_USERNAME" in os.environ and "OS_DNS_PASSWORD" in os.environ):
