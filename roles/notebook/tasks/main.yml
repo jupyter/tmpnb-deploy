@@ -29,7 +29,7 @@
 - name: pull tmpnb service images
   command: docker pull {{ item }}
   with_items:
-  - jupyter/configurable-http-proxy
+  - jupyterhub/configurable-http-proxy
   - jupyter/tmpnb
   sudo: yes
 
@@ -46,7 +46,7 @@
   docker:
     state: reloaded
     pull: always
-    image: jupyter/configurable-http-proxy
+    image: jupyterhub/configurable-http-proxy
     detach: true
     net: host
     name: configproxy
