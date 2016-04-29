@@ -22,7 +22,7 @@
   sudo: yes
 
 - name: install docker
-  apt: update_cache=yes name=lxc-docker-1.7.1
+  apt: update_cache=yes name=lxc-docker-1.9.1
   sudo: yes
 
 - name: python
@@ -37,5 +37,5 @@
   sudo: yes
 
 - name: docker-py
-  pip: name=docker-py version=1.1.0
+  pip: name=docker-py version=1.7.0
   sudo: yes
