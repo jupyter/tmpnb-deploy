@@ -1,8 +1,4 @@
 ---
-- name: pull docker image for user containers
-  command: docker pull {{ tmpnb_image }}
-  sudo: yes
-
 - name: configuration directories
   file: state=directory dest={{ item }} mode=0755
   with_items:
