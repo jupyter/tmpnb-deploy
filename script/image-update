@@ -3,12 +3,17 @@ set -e
 
 ROOT=$(dirname $0)/..
 INVENTORY=${INVENTORY:-${ROOT}/inventory}
+
 if [ ! -e ${INVENTORY} ]; then
   echo "Please create an inventory file with your hosts."
   echo " cp inventory.example inventory"
   exit 1
 fi
 
-set -x
-ansible notebook -m shell -a 'docker pull jupyter/demo' -i ${INVENTORY}
-ansible notebook -m shell -a "docker images -f dangling\=true -q | xargs docker rmi" -i ${INVENTORY}
+if [ -e ${ROOT}/secrets.yml ]; then
+  VAULT_ARG=
+else
+  VAULT_ARG=--ask-vault-pass
+fi
+
+exec ansible-playbook ${ROOT}/update.yml -i ${INVENTORY} ${VAULT_ARG} $@

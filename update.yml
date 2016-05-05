@@ -1,0 +1,10 @@
+---
+# re-run notebook deploy
+# assumes machine is already setup and running
+- hosts: notebook
+  vars_files:
+  - ['secrets.yml', 'secrets.vault.yml']
+  - ['vars.local.yml', 'vars.yml']
+  roles:
+  - notebook
+
