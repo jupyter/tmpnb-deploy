@@ -24,7 +24,7 @@ import os
 
 import pyrax
 
-def name_new_nodes(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
+def name_new_nodes(prefix="demo", region="dfw", node_num=1, domain="tmpnb.org"):
     # The naming problem
     #node_naming_scheme = "{prefix}-{region}-{node_num:03}"
     node_naming_scheme = "{prefix}{node_num:02}"
@@ -117,7 +117,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--prefix', type=str, default='tmp',
                         help='prefix in the URL base')
-    parser.add_argument('--region', type=str, default='iad',
+    parser.add_argument('--region', type=str, default='dfw',
                         help='region to deploy to, also part of the domain name')
     parser.add_argument('node_num', type=int,
                         help='what this set of servers will be identified as numerically')
