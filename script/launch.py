@@ -52,6 +52,10 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
     ubs = [image for image in images if "Ubuntu 14.04" in image.name]
     user_image = [image for image in ubs if "OnMetal" in image.name][0]
     proxy_image = [image for image in ubs if "PVHVM" in image.name][0]
+    # Get our flavors
+    flavors = cs.list_flavors()
+    proxy_flavor = [flavor for flavor in flavors if flavor.ram == 8192 and "General Purpose" in flavor.name][0]
+    user_flavor = [flavor for flavor in flavors if "OnMetal" in flavor.name and "Medium" in flavor.name][0]
 
     user_server_name, proxy_server_name = name_new_nodes(prefix=prefix,
                                                          region=region.lower(),
@@ -59,8 +63,8 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
                                                          domain=domain)
 
     # Launch the servers
-    proxy_server = cs.servers.create(proxy_server_name, image=proxy_image.id, flavor='performance2-15', key_name=key_name)
-    user_server = cs.servers.create(user_server_name, image=user_image.id, flavor='onmetal-memory1', key_name=key_name)
+    proxy_server = cs.servers.create(proxy_server_name, image=proxy_image.id, flavor=proxy_flavor.id, key_name=key_name)
+    user_server = cs.servers.create(user_server_name, image=user_image.id, flavor=user_flavor.id, key_name=key_name)
 
     # Wait on them
     print("Waiting on Proxy server")
