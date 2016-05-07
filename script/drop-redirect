@@ -1,0 +1,14 @@
+#!/bin/bash
+
+ROOT=$(dirname $0)/..
+
+n=$1
+
+if [ -z "$n" ]; then
+    echo 'specify node number'
+   exit -1
+fi
+
+HOST=https://tmp$n.tmpnb.org
+
+exec ansible -i "$ROOT/inventory.redirector" redirector -m shell -a "bash tmpnb-redirector/drop_hosts.sh $HOST"
