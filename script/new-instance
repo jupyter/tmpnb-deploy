@@ -23,4 +23,11 @@ export INVENTORY="$ROOT/inventory.$n"
 
 # disable initial host-key check for new hosts
 export ANSIBLE_HOST_KEY_CHECKING=False
+
+# wait for nodes to respond to ssh:
+while true; do
+    ansible -i "$INVENTORY" all -m ping && break || sleep 5
+done
+
+# deploy
 "$SCRIPT/deploy"
