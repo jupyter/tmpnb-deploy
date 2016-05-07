@@ -1,0 +1,26 @@
+#!/bin/bash
+# Bring up a complete node from scratch
+# 1. create node with launch.py
+# 2. add node to redirector with add-redirect
+# 3. deploy node with deploy
+
+set -e
+
+SCRIPT="$(dirname $0)"
+ROOT="$(dirname $0)/.."
+
+n=$1
+
+if [ -z "$n" ]; then
+   echo 'specify $n'
+   exit -1
+fi
+
+"$SCRIPT/launch.py" $n
+"$SCRIPT/add-redirect" $n
+
+export INVENTORY="$ROOT/inventory.$n"
+
+# disable initial host-key check for new hosts
+export ANSIBLE_HOST_KEY_CHECKING=False
+"$SCRIPT/deploy"

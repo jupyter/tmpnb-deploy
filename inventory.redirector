@@ -1,0 +1,2 @@
+[redirector]
+tmpnb.org ansible_ssh_user=root ansible_ssh_host=tmpnb.org
