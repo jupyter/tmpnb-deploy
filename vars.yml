@@ -13,6 +13,7 @@ tmpnb_docker_version: "auto"
 
 tmpnb_pool_size: 64
 tmpnb_cpu_shares: 32 # should be 16
+tmpnb_cpu_quota: 200000 # 100 000 = 1 CPU per container
 tmpnb_mem_limit: "2g"
 
 # GitHub users to grab public keys from
