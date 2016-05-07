@@ -82,5 +82,6 @@
       --max_dock_workers={{ tmpnb_max_dock_workers }}
       --mem-limit={{ tmpnb_mem_limit }}
       --cpu-shares={{ tmpnb_cpu_shares }}
+      --cpu-quota={{ tmpnb_cpu_quota }}
       --ip="127.0.0.1"
       --allow-origin='*'
