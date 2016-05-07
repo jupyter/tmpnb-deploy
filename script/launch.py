@@ -96,7 +96,7 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
            proxy_server_name=proxy_server_name,
     )
     
-    inventory_name = 'inventory-%s' % proxy_server_name
+    inventory_name = 'inventory.%i' % node_num
     with open(inventory_name, 'w') as f:
         f.write(inventory)
     
