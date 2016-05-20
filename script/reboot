@@ -1,0 +1,32 @@
+#!/usr/bin/env python2
+"""
+Reboot user nodes by id
+
+Usage:
+
+    ./script/reboot 50 [51] [52]
+"""
+
+import os
+import sys
+
+import pyrax
+
+region = 'DFW'
+
+def reboot_node(n):
+    name = 'tmp%s-user.tmpnb.org' % n
+    cs = pyrax.connect_to_cloudservers(region=region)
+    print("Rebooting %s" % name)
+    server = cs.servers.find(name=name)
+    server.reboot()
+
+def login():
+    pyrax.set_setting("identity_type", "rackspace")
+    pyrax.set_credentials(os.environ["OS_USERNAME"], os.environ["OS_PASSWORD"])
+    
+
+if __name__ == '__main__':
+    login()
+    for n in sys.argv[1:]:
+        reboot_node(n)
