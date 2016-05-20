@@ -32,6 +32,7 @@ def name_new_nodes(prefix="demo", region="dfw", node_num=1, domain="tmpnb.org"):
 
     return user_server_name, proxy_server_name
 
+
 def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
     key_name = "main"
 
@@ -70,6 +71,8 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
     proxy_server = pyrax.utils.wait_for_build(proxy_server, verbose=True)
     print("Waiting on Notebook User server")
     user_server = pyrax.utils.wait_for_build(user_server, verbose=True)
+    ping_alarm(proxy_server)
+    ping_alarm(user_server)
 
     # Making this in case we want some JSON
     node_layout = {
@@ -111,6 +114,26 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
                     'name': proxy_server_name,
                     'ttl': 60*5,
                     'data': proxy_server.accessIPv4})
+
+
+PING_ALARM_CRITERIA = """
+if (metric['available'] < 20) {
+  return new AlarmStatus(CRITICAL, 'Host appears to be unreachable');
+}
+
+return new AlarmStatus(OK, 'Packet loss is normal');
+"""
+
+def ping_alarm(server):
+    """Add a ping alarm, so we get emails whenever a node appears to go down."""
+    cm = pyrax.cloud_monitoring
+    notification_plan = cm.list_notification_plans()[0]
+    # get monitoring entities
+    entities = [ e for e in cm.list_entities() if e.label == server.name ]
+    # get ping check
+    ping = [ e for e in entities if 'ping' in e.list_checks()[0].label.lower() ][0]
+    ping_check = ping.list_checks()[0]
+    ping.create_alarm(ping_check, notification_plan, criteria=PING_ALARM_CRITERIA, label='ping')
 
 
 if __name__ == "__main__":
