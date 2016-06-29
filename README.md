@@ -16,7 +16,8 @@ This is also set up for our own use, which means it may not work well for your o
 ### "Easy" mode
 
 ```
-script/deploy
+source ./novarc
+./script/new-instance
 ```
 
 ### Directly, assuming you have secrets.yml available
