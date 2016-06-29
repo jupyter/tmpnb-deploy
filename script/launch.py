@@ -48,12 +48,12 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
     # Get our base images
     images = cs.list_base_images()
     ubs = [image for image in images if "Ubuntu 14.04" in image.name]
-    user_image = [image for image in ubs if "PVHVM" in image.name][0]
+    user_image = [image for image in ubs if "OnMetal" in image.name][0]
     proxy_image = [image for image in ubs if "PVHVM" in image.name][0]
     # Get our flavors
     flavors = cs.list_flavors()
     proxy_flavor = [flavor for flavor in flavors if flavor.ram == 8192 and "General Purpose" in flavor.name][0]
-    user_flavor = [flavor for flavor in flavors if "30" in flavor.name and "I/O" in flavor.name][0]
+    user_flavor = [flavor for flavor in flavors if "OnMetal" in flavor.name and "Medium" in flavor.name][0]
     print("Proxy: %s" % proxy_flavor.name)
     print(" User: %s" % user_flavor.name)
 
