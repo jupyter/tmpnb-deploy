@@ -5,18 +5,18 @@
     regexp: GRUB_CMDLINE_LINUX=.*
     line: GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"
   register: grubbed
-  sudo: yes
+  become: yes
 
 - name: apply changed grub settings
   command: update-grub
-  sudo: yes
+  become: yes
   when: grubbed | changed
   
 - name: reboot
   command: shutdown -r now "Ansible updated grub"
   async: 0
   poll: 0
-  sudo: yes
+  become: yes
   ignore_errors: true
   when: grubbed | changed
 
@@ -31,16 +31,16 @@
   with_items:
   - jupyterhub/configurable-http-proxy
   - jupyter/tmpnb
-  sudo: yes
+  become: yes
 
 - name: pull docker image for user containers
   command: docker pull {{ tmpnb_image }}
-  sudo: yes
+  become: yes
 
 
 - name: iptables configuration
   command: iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 8000
-  sudo: yes
+  become: yes
 
 - name: configproxy
   docker:

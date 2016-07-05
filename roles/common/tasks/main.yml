@@ -1,15 +1,15 @@
 ---
 - name: install vim for ops sanity
   apt: update_cache=yes cache_valid_time=600 name=vim state=latest
-  sudo: yes
+  become: yes
 
 - name: YOLO system upgrade
   apt: upgrade=safe
-  sudo: yes
+  become: yes
 
 - name: sshd configuration
   copy: src=sshd_config dest=/etc/ssh/sshd_config mode=0644
-  sudo: yes
+  become: yes
   notify:
   - restart sshd
 
@@ -22,6 +22,6 @@
 
 - name: assemble the authorized keys file
   assemble: dest=/root/.ssh/authorized_keys mode=0600 src=/tmp/pubkeys
-  sudo: yes
+  become: yes
 
 - include: docker.yml
