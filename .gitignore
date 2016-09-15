@@ -62,3 +62,4 @@ vars.local.yml
 inventory
 inventory.*
 secrets.yml
+statuspage-env

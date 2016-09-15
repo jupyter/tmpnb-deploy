@@ -78,3 +78,18 @@ cp nginx.conf /etc/nginx/sites-available/default
 service nginx restart
 ```
 
+
+### Status page
+
+The status page daemon for tmpnb availability is run on the tmpnb-status carina cluster.
+
+You will need to get the API key from statuspage.io, and create `statuspage-env` with:
+
+    STATUS_PAGE_API_KEY=<the-api-key>
+
+Run:
+
+    eval $(carina env tmpnb-status)
+    ./script/launch-statuspage
+
+To launch the statuspage daemons.

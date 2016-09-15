@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+docker pull rgbkrk/tmpnb-statuspage
+
+for app in tmpnb nature; do
+    docker run --restart=always -d --env-file statuspage-env --env-file statuspage-$app-env --name statuspage-$app rgbkrk/tmpnb-statuspage
+done
