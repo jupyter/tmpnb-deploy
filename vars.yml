@@ -3,6 +3,8 @@
 
 # Configuration parameters for containers.
 
+letsencrypt_email: benjaminrk@gmail.com
+
 tmpnb_cull_timeout: 120
 tmpnb_cull_period: 400
 tmpnb_image: jupyter/demo:latest

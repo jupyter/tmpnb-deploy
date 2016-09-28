@@ -1,10 +1,7 @@
 ---
-ssl_cert_path: /etc/ssl/tmpnb.org.crt
-ssl_key_path: /etc/ssl/tmpnb.org.key
 nginx_config_dir: /etc/nginx
 nginx_volumes:
-- "{{ ssl_key_path }}:{{ ssl_key_path }}:ro"
-- "{{ ssl_cert_path }}:{{ ssl_cert_path }}:ro"
+- "/etc/letsencrypt:/etc/letsencrypt:ro"
 nginx_ports:
 - 80:80
 - 443:443
