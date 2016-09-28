@@ -63,8 +63,21 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
                                                          domain=domain)
 
     # Launch the servers
-    user_server = cs.servers.create(user_server_name, image=user_image.id, flavor=user_flavor.id, key_name=key_name)
-    proxy_server = cs.servers.create(proxy_server_name, image=proxy_image.id, flavor=proxy_flavor.id, key_name=key_name)
+    try:
+        user_server = cs.servers.find(name=user_server_name)
+    except Exception as e:
+        print(e)
+        user_server = cs.servers.create(user_server_name, image=user_image.id, flavor=user_flavor.id, key_name=key_name)
+    else:
+        print("User server %s already started" % user_server_name)
+
+    try:
+        proxy_server = cs.servers.find(name=proxy_server_name)
+    except Exception as e:
+        print(e)
+        proxy_server = cs.servers.create(proxy_server_name, image=proxy_image.id, flavor=proxy_flavor.id, key_name=key_name)
+    else:
+        print("Proxy server %s already started" % proxy_server_name)
 
     # Wait on them
     print("Waiting on Proxy server")
@@ -129,9 +142,17 @@ def ping_alarm(server):
     cm = pyrax.cloud_monitoring
     notification_plan = cm.list_notification_plans()[0]
     # get monitoring entities
-    entities = [ e for e in cm.list_entities() if e.label == server.name ]
+    
     # get ping check
-    ping = [ e for e in entities if 'ping' in e.list_checks()[0].label.lower() ][0]
+    pings = []
+    while not pings:
+        entities = [ e for e in cm.list_entities() if e.label == server.name ]
+        pings = [ e for e in entities if e.list_checks() and 'ping' in e.list_checks()[0].label.lower() ]
+        if not pings:
+            print('waiting for ping check to be registered')
+            print(e.list_checks()[0].label.lower() for e in entities)
+            time.sleep(1)
+    ping = pings[0]
     ping_check = ping.list_checks()[0]
     ping.create_alarm(ping_check, notification_plan, criteria=PING_ALARM_CRITERIA, label='ping')
 
