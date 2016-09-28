@@ -2,3 +2,8 @@
 - name: restart sshd
   service: name=ssh state=restarted
   become: yes
+
+- name: update apt
+  apt: update_cache=yes
+  become: yes
+  

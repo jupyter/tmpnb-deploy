@@ -1,10 +1,21 @@
 ---
-- name: install vim for ops sanity
-  apt: update_cache=yes cache_valid_time=600 name=vim state=latest
+- name: install vim, ruby for ops sanity
+  apt: update_cache=yes cache_valid_time=3600 name={{ item }} state=latest
+  with_items:
+    - vim
+    - ruby
+  become: yes
+
+- name: install rmate
+  gem: name=rmate user_install=no state=latest
+  become: yes
+
+- name: set apt yes default
+  copy: src=99-apt-yes dest=/etc/apt/apt.conf.d/99-apt-yes
   become: yes
 
 - name: YOLO system upgrade
-  apt: upgrade=safe
+  apt: update_cache=yes cache_valid_time=3600 upgrade=safe
   become: yes
 
 - name: sshd configuration
@@ -18,7 +29,7 @@
 
 - name: fetch public keys from github
   get_url: dest=/tmp/pubkeys/{{ item }}-pubkeys url=https://github.com/{{ item }}.keys
-  with_items: github_usernames
+  with_items: "{{ github_usernames }}"
 
 - name: assemble the authorized keys file
   assemble: dest=/root/.ssh/authorized_keys mode=0600 src=/tmp/pubkeys
