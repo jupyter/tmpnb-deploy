@@ -85,3 +85,4 @@
       --cpu-quota={{ tmpnb_cpu_quota }}
       --ip="127.0.0.1"
       --allow-origin='*'
+      --allow-methods='GET, PUT, POST, PATCH, DELETE, OPTIONS'
