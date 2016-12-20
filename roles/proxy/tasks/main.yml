@@ -11,7 +11,7 @@
     dest: /usr/local/bin/certbot-auto
     mode: 755
 
-- name: SSL credentials with certbot
+- name: SSL credentials with certbot (letsencrypt)
   command: /usr/local/bin/certbot-auto certonly --agree-tos --standalone -m {{ letsencrypt_email }} -d {{ inventory_hostname }} creates=/etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem
   become: yes
   notify:
