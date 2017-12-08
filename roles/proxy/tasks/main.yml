@@ -37,11 +37,11 @@
     name: tmpnb_nginx
     state: present
   become: yes
- 
+
 - name: launch nginx
-  docker:
+  docker_container:
     image: tmpnb_nginx
-    state: running
+    state: started
     name: nginx
     volumes: "{{ nginx_volumes }}"
     ports: "{{ nginx_ports }}"

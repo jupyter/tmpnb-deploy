@@ -35,4 +35,4 @@
   assemble: dest=/root/.ssh/authorized_keys mode=0600 src=/tmp/pubkeys
   become: yes
 
-- include: docker.yml
+- include_tasks: docker.yml

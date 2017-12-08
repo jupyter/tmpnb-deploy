@@ -24,7 +24,7 @@
   local_action: wait_for host={{ inventory_hostname }} state=started
   when: grubbed | changed
 
-- include: docker.yml
+- include_tasks: docker.yml
 
 - name: pull tmpnb service images
   command: docker pull {{ item }}
@@ -43,12 +43,11 @@
   become: yes
 
 - name: configproxy
-  docker:
-    state: reloaded
-    pull: always
+  docker_container:
+    state: started
+    pull: true
     image: jupyterhub/configurable-http-proxy
-    detach: true
-    net: host
+    network_mode: host
     name: configproxy
     restart_policy: always
     env:
@@ -59,12 +58,11 @@
       --api-ip="127.0.0.1"
 
 - name: tmpnb
-  docker:
-    state: reloaded
-    pull: always
+  docker_container:
+    state: started
+    pull: true
     image: jupyter/tmpnb
-    detach: true
-    net: host
+    network_mode: host
     name: tmpnb
     restart_policy: always
     env:
