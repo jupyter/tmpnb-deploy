@@ -23,7 +23,7 @@
   notify: update apt
 
 - name: install docker
-  apt: update_cache=yes cache_valid_time=3600 name=docker-engine=1.12.1-0~{{ ansible_distribution_release }}
+  apt: update_cache=yes cache_valid_time=3600 name=docker-engine=17.05.0~ce-0~ubuntu-{{ ansible_distribution_release }}
   become: yes
 
 - name: python
@@ -39,5 +39,5 @@
 
 - name: docker-py
   # FIXME: can't upgrade to docker-py 1.10 until ansible 2.2
-  pip: name=docker-py version=1.9.*
+  pip: name=docker-py version=1.10.*
   become: yes
