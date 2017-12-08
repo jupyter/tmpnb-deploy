@@ -6,6 +6,9 @@ This script requires 4 environment variables to be declared:
     OS_USERNAME - Rackspace user for account that servers will be launched on
     OS_PASSWORD - API Key for the server launch user
 
+    CF_API_KEY - CloudFlare API key
+    CF_EMAIL - CloudFlare email address
+
     OS_DNS_USERNAME - Rackspace user with the tmpnb.org domain
     OS_DNS_PASSWORD - API key for the DNS user
 
@@ -17,9 +20,50 @@ The Ansible inventory file is spat out to stdout at the end.
 '''
 
 import binascii
+import json
 import os
+import time
 
 import pyrax
+import requests
+
+
+CF_API_URL = 'https://api.cloudflare.com/client/v4/'
+
+
+def cf_get_zone_id(s, domain):
+    """Get cloudflare zone id"""
+    r = s.get(CF_API_URL + 'zones?name=%s' % domain)
+    r.raise_for_status()
+    return r.json()['result'][0]['id']
+
+
+def get_dns(s, zone_id):
+    r = s.get(CF_API_URL + 'zones/%s/dns_records' % zone_id)
+    r.raise_for_status()
+    records = {}
+    for res in r.json()['result']:
+        records[res['name']] = res
+    return records
+
+
+def add_dns(name, ipv4):
+    """Add DNS record with cloudflare"""
+    s = requests.session()
+    s.headers = {
+        'X-Auth-Key': os.environ['CF_API_KEY'],
+        'X-Auth-Email': os.environ['CF_EMAIL'],
+    }
+    domain = '.'.join(name.split('.')[-2:])
+    print(domain)
+    zone_id = cf_get_zone_id(s, domain)
+    r = s.post(CF_API_URL + 'zones/%s/dns_records' % zone_id, data=json.dumps({
+        'type': 'A',
+        'name': name,
+        'content': ipv4,
+    }))
+    r.raise_for_status()
+
 
 def name_new_nodes(prefix="demo", region="dfw", node_num=1, domain="tmpnb.org"):
     # The naming problem
@@ -33,7 +77,7 @@ def name_new_nodes(prefix="demo", region="dfw", node_num=1, domain="tmpnb.org"):
     return user_server_name, proxy_server_name
 
 
-def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
+def launch_node(prefix="demo", region="dfw", node_num=1, domain="tmpnb.org"):
     key_name = "main"
 
     pyrax.set_setting("identity_type", "rackspace")
@@ -110,23 +154,15 @@ def launch_node(prefix="demo", region="iad", node_num=1, domain="tmpnb.org"):
            user_server_name=user_server_name,
            proxy_server_name=proxy_server_name,
     )
-    
+
     inventory_name = 'inventory.%i' % node_num
     with open(inventory_name, 'w') as f:
         f.write(inventory)
-    
+
     print("Deploy tmpnb on this node with with:")
     print("  INVENTORY=%s ./script/deploy" % inventory_name)
 
-    # If a separate account is used for DNS, use that instead
-    if("OS_DNS_USERNAME" in os.environ and "OS_DNS_PASSWORD" in os.environ):
-        pyrax.set_credentials(os.environ["OS_DNS_USERNAME"], os.environ["OS_DNS_PASSWORD"])
-
-    dns = pyrax.cloud_dns.find(name=domain)
-    dns.add_record({'type': 'A',
-                    'name': proxy_server_name,
-                    'ttl': 60*5,
-                    'data': proxy_server.accessIPv4})
+    add_dns(proxy_server_name, proxy_server.accessIPv4)
 
 
 PING_ALARM_CRITERIA = """
@@ -172,7 +208,7 @@ if __name__ == "__main__":
                         help='domain to host the servers on')
 
     args = parser.parse_args()
-    launch_node(prefix=args.prefix, 
+    launch_node(prefix=args.prefix,
                 region=args.region,
                 node_num=args.node_num,
                 domain=args.domain
