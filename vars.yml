@@ -7,7 +7,7 @@ letsencrypt_email: benjaminrk@gmail.com
 
 tmpnb_cull_timeout: 120
 tmpnb_cull_period: 400
-tmpnb_image: jupyter/demo:latest
+tmpnb_image: jupyter/demo:c7fb6660d096
 tmpnb_redirect_uri: /tree
 tmpnb_command: start-notebook.sh "--NotebookApp.base_url={base_path} --NotebookApp.allow_origin='*' --port={port} --NotebookApp.token="
 tmpnb_max_dock_workers: 8
