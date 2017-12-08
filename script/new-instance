@@ -4,7 +4,7 @@
 # 2. add node to redirector with add-redirect
 # 3. deploy node with deploy
 
-set -e
+set -eu
 
 SCRIPT="$(dirname $0)"
 ROOT="$(dirname $0)/.."
@@ -15,6 +15,7 @@ if [ -z "$n" ]; then
    echo 'specify $n'
    exit -1
 fi
+set -x
 
 "$SCRIPT/launch.py" $n
 "$SCRIPT/add-redirect" $n

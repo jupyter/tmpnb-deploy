@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
 This script requires 4 environment variables to be declared:
@@ -24,7 +24,7 @@ import json
 import os
 import time
 
-import pyrax
+from rackspace.connection import Connection
 import requests
 
 
@@ -77,25 +77,50 @@ def name_new_nodes(prefix="demo", region="dfw", node_num=1, domain="tmpnb.org"):
     return user_server_name, proxy_server_name
 
 
+def print_server_status(server):
+    print("{name} {status} progress={progress}".format(
+        name=server.name,
+        status=server.status,
+        progress=server.progress,
+    ))
+
+
+def wait_for_server(compute, server, timeout=600, interval=10):
+    # rackspacesdk wait_for_server doesn't work!
+    tic = time.monotonic()
+    while time.monotonic() - tic < timeout and server.status != 'ACTIVE':
+        print_server_status(server)
+        time.sleep(interval)
+        server = list(compute.servers(name=server.name))[0]
+
+    if server.status != 'ACTIVE':
+        raise TimeoutError("{name} is still {status}".format(
+            name=server.name,
+            status=server.status))
+    print_server_status(server)
+    return server
+
+
 def launch_node(prefix="demo", region="dfw", node_num=1, domain="tmpnb.org"):
     key_name = "main"
 
-    pyrax.set_setting("identity_type", "rackspace")
-    pyrax.set_credentials(os.environ["OS_USERNAME"], os.environ["OS_PASSWORD"])
+    rs = Connection(
+        username=os.environ['OS_USERNAME'],
+        api_key=os.environ['OS_PASSWORD'],
+        region=region.upper(),
+    )
 
-    cs = pyrax.connect_to_cloudservers(region=region.upper())
 
-    # My least favorite bug in pyrax - silent errors
-    if(cs is None):
-        raise Exception("Unable to connect to given region '{}'".format(region))
+    compute = rs.compute
+
 
     # Get our base images
-    images = cs.list_base_images()
+    images = compute.images()
     ubs = [image for image in images if "Ubuntu 14.04" in image.name]
     user_image = [image for image in ubs if "OnMetal" in image.name][0]
     proxy_image = [image for image in ubs if "PVHVM" in image.name][0]
     # Get our flavors
-    flavors = cs.list_flavors()
+    flavors = list(compute.flavors())
     proxy_flavor = [flavor for flavor in flavors if flavor.ram == 8192 and "General Purpose" in flavor.name][0]
     user_flavor = [flavor for flavor in flavors if "OnMetal" in flavor.name and "Medium" in flavor.name][0]
     print("Proxy: %s" % proxy_flavor.name)
@@ -108,49 +133,38 @@ def launch_node(prefix="demo", region="dfw", node_num=1, domain="tmpnb.org"):
 
     # Launch the servers
     try:
-        user_server = cs.servers.find(name=user_server_name)
-    except Exception as e:
-        print(e)
-        user_server = cs.servers.create(user_server_name, image=user_image.id, flavor=user_flavor.id, key_name=key_name)
+        user_server = next(iter(compute.servers(name=user_server_name)))
+    except StopIteration:
+        user_server = compute.create_server(name=user_server_name, imageRef=user_image.id, flavorRef=user_flavor.id, key_name=key_name)
     else:
         print("User server %s already started" % user_server_name)
 
     try:
-        proxy_server = cs.servers.find(name=proxy_server_name)
-    except Exception as e:
-        print(e)
-        proxy_server = cs.servers.create(proxy_server_name, image=proxy_image.id, flavor=proxy_flavor.id, key_name=key_name)
+        proxy_server = next(iter(compute.servers(name=proxy_server_name)))
+    except StopIteration:
+        proxy_server = compute.create_server(name=proxy_server_name, imageRef=proxy_image.id, flavorRef=proxy_flavor.id, key_name=key_name)
     else:
         print("Proxy server %s already started" % proxy_server_name)
 
     # Wait on them
     print("Waiting on Proxy server")
-    proxy_server = pyrax.utils.wait_for_build(proxy_server, verbose=True)
+    proxy_server = wait_for_server(compute, proxy_server)
     print("Waiting on Notebook User server")
-    user_server = pyrax.utils.wait_for_build(user_server, verbose=True)
+    user_server = wait_for_server(compute, user_server)
+
+    # create ping alarms
     ping_alarm(proxy_server)
     ping_alarm(user_server)
-
-    # Making this in case we want some JSON
-    node_layout = {
-        'notebook_server': {
-            'private': user_server.networks['private'][0],
-            'public': user_server.networks['public'][0]
-        },
-        'proxy_server': {
-            'public': proxy_server.networks['public'][0]
-        }
-    }
 
     inventory = '''[notebook]
 {user_server_name} ansible_ssh_user=root ansible_ssh_host={notebook_server_public} configproxy_auth_token={token} notebook_host={notebook_server_private}
 
 [proxy]
 {proxy_server_name} ansible_ssh_user=root ansible_ssh_host={proxy_server_public} notebook_host={notebook_server_private}
-'''.format(notebook_server_public=user_server.accessIPv4,
-           notebook_server_private=user_server.networks['private'][0],
-           proxy_server_public=proxy_server.accessIPv4,
-           token=binascii.hexlify(os.urandom(24)),
+'''.format(notebook_server_public=user_server.access_ipv4,
+           notebook_server_private=user_server.addresses['private'][0]['addr'],
+           proxy_server_public=proxy_server.access_ipv4,
+           token=binascii.hexlify(os.urandom(24)).decode('ascii'),
            user_server_name=user_server_name,
            proxy_server_name=proxy_server_name,
     )
@@ -162,7 +176,7 @@ def launch_node(prefix="demo", region="dfw", node_num=1, domain="tmpnb.org"):
     print("Deploy tmpnb on this node with with:")
     print("  INVENTORY=%s ./script/deploy" % inventory_name)
 
-    add_dns(proxy_server_name, proxy_server.accessIPv4)
+    add_dns(proxy_server_name, proxy_server.access_ipv4)
 
 
 PING_ALARM_CRITERIA = """
@@ -175,22 +189,30 @@ return new AlarmStatus(OK, 'Packet loss is normal');
 
 def ping_alarm(server):
     """Add a ping alarm, so we get emails whenever a node appears to go down."""
-    cm = pyrax.cloud_monitoring
+    from rackspace_monitoring.providers import get_driver
+    from rackspace_monitoring.types import Provider
+    RaxMon = get_driver(Provider.RACKSPACE)
+    cm = RaxMon(os.environ['OS_USERNAME'], os.environ['OS_PASSWORD'])
     notification_plan = cm.list_notification_plans()[0]
     # get monitoring entities
-    
+
     # get ping check
     pings = []
     while not pings:
         entities = [ e for e in cm.list_entities() if e.label == server.name ]
-        pings = [ e for e in entities if e.list_checks() and 'ping' in e.list_checks()[0].label.lower() ]
+        pings = [ e for e in entities if cm.list_checks(e) and 'ping' in cm.list_checks(e)[0].label.lower() ]
         if not pings:
             print('waiting for ping check to be registered')
-            print(e.list_checks()[0].label.lower() for e in entities)
+            print([cm.list_checks(e)[0].label.lower() for e in entities])
             time.sleep(1)
     ping = pings[0]
-    ping_check = ping.list_checks()[0]
-    ping.create_alarm(ping_check, notification_plan, criteria=PING_ALARM_CRITERIA, label='ping')
+    ping_check = cm.list_checks(ping)[0]
+
+    cm.create_alarm(ping,
+        check_id=ping_check.id,
+        notification_plan_id=notification_plan.id,
+        criteria=PING_ALARM_CRITERIA,
+        label='ping')
 
 
 if __name__ == "__main__":

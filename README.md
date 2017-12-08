@@ -15,7 +15,9 @@ This is also set up for our own use, which means it may not work well for your o
 
 ### "Easy" mode
 
+
 ```
+pip install rackpacesdk rackspace-monitoring
 source ./novarc
 ./script/new-instance <N>
 ```
